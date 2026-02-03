@@ -1,0 +1,2047 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>نظام إدارة المبيعات الاحترافي</title>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --dark-lighter: #334155;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --border: rgba(255, 255, 255, 0.1);
+            --bg-card: rgba(255, 255, 255, 0.03);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--dark);
+            min-height: 100vh;
+            direction: rtl;
+            overflow-x: hidden;
+            color: var(--text-primary);
+        }
+
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--dark);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        .login-logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.3);
+        }
+
+        .login-logo svg {
+            width: 60px;
+            height: 60px;
+            fill: white;
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .profile-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-image-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 15px;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 3px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-image svg {
+            width: 50px;
+            height: 50px;
+            fill: var(--text-muted);
+        }
+
+        .profile-upload-btn {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 3px solid var(--dark);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+
+        .profile-upload-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .profile-upload-input {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* Main App */
+        .main-app {
+            display: none;
+        }
+
+        .main-app.active {
+            display: block;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--dark-light) 0%, var(--dark) 100%);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .store-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .store-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .store-logo svg {
+            width: 25px;
+            height: 25px;
+            fill: var(--text-muted);
+        }
+
+        .header-title h1 {
+            font-size: 18px;
+            color: var(--text-primary);
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .logout-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--danger);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 480px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--dark-light) 0%, var(--dark) 100%);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+            border-top: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            transition: all 0.3s;
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Content */
+        .content {
+            padding: 15px;
+            padding-bottom: calc(80px + env(safe-area-inset-bottom));
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Dashboard Stats */
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+        }
+
+        .today-sales {
+            text-align: center;
+        }
+
+        .today-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .today-amount {
+            font-size: 42px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .today-currency {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon.blue {
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .stat-icon.green {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .stat-icon.purple {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .stat-icon.orange {
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .stat-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .stat-icon.blue svg {
+            fill: var(--primary);
+        }
+
+        .stat-icon.green svg {
+            fill: var(--success);
+        }
+
+        .stat-icon.purple svg {
+            fill: var(--secondary);
+        }
+
+        .stat-icon.orange svg {
+            fill: var(--warning);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            color: var(--text-primary);
+            font-weight: 800;
+        }
+
+        .stat-unit {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-right: 4px;
+        }
+
+        /* Sales History */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .date-filter {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 4px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .sales-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sale-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 15px;
+        }
+
+        .sale-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .sale-date {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .sale-total {
+            font-size: 20px;
+            color: var(--success);
+            font-weight: 800;
+        }
+
+        .sale-products {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Products */
+        .search-box {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+        }
+
+        .search-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 45px 14px 15px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+        }
+
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .product-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 15px;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            color: var(--text-primary);
+            font-weight: 700;
+            flex: 1;
+        }
+
+        .product-price {
+            font-size: 20px;
+            color: var(--primary);
+            font-weight: 800;
+            margin-right: 10px;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-barcode {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-delete:active {
+            transform: scale(0.95);
+        }
+
+        /* Add Product */
+        .camera-section {
+            margin-bottom: 25px;
+        }
+
+        .barcode-input-wrapper {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .barcode-input-wrapper .form-input {
+            flex: 1;
+        }
+
+        .btn-camera {
+            width: 54px;
+            height: 54px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-camera svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .btn-camera.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-color: transparent;
+        }
+
+        .btn-camera.active svg {
+            fill: white;
+        }
+
+        .camera-container {
+            display: none;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 2px solid var(--primary);
+            position: relative;
+        }
+
+        .camera-container.active {
+            display: block;
+        }
+
+        #camera-preview {
+            width: 100%;
+            border-radius: 14px;
+        }
+
+        .camera-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Scanner */
+        #scanner-reader {
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 2px solid var(--primary);
+        }
+
+        .scan-result {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .scan-result-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+        }
+
+        .scan-result-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--success);
+        }
+
+        .scan-result-name {
+            font-size: 18px;
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .scan-result-price {
+            font-size: 36px;
+            color: var(--success);
+            font-weight: 800;
+            margin: 15px 0;
+        }
+
+        .scan-result-barcode {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+            margin-top: 12px;
+        }
+
+        .scan-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-sell {
+            flex: 1;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-sell:active {
+            transform: scale(0.98);
+        }
+
+        /* Reports */
+        .report-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .report-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .report-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        .report-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .report-value {
+            font-size: 15px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .top-products {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .top-product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
+
+        .top-product-rank {
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+            color: white;
+        }
+
+        .top-product-info {
+            flex: 1;
+            margin: 0 12px;
+        }
+
+        .top-product-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 3px;
+        }
+
+        .top-product-sales {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .top-product-count {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--success);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success);
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            display: none;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Month Filter */
+        .month-selector {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .month-selector select {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .month-selector svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Login Screen -->
+        <div class="login-screen" id="login-screen">
+            <div class="login-logo">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4zm10 16H4V9h16v11z"/>
+                    <path d="M12 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+            </div>
+            <h1 class="login-title">نظام إدارة المبيعات</h1>
+            <p class="login-subtitle">سجل دخولك لإدارة متجرك بشكل احترافي</p>
+            
+            <form class="login-form" id="login-form" onsubmit="handleLogin(event)">
+                <div class="profile-upload">
+                    <div class="profile-image-container">
+                        <div class="profile-image" id="preview-logo">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4zm10 16H4V9h16v11z"/>
+                            </svg>
+                        </div>
+                        <label class="profile-upload-btn" for="logo-upload">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                            </svg>
+                        </label>
+                        <input type="file" id="logo-upload" class="profile-upload-input" accept="image/*" onchange="previewLogo(event)">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">اسم المتجر</label>
+                    <input type="text" class="form-input" id="store-name" placeholder="أدخل اسم المتجر" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">رقم الهاتف</label>
+                    <input type="tel" class="form-input" id="store-phone" placeholder="01XXXXXXXXX" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">البريد الإلكتروني</label>
+                    <input type="email" class="form-input" id="store-email" placeholder="example@email.com" required>
+                </div>
+
+                <button type="submit" class="btn-primary">تسجيل الدخول</button>
+            </form>
+        </div>
+
+        <!-- Main App -->
+        <div class="main-app" id="main-app">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <div class="store-logo" id="header-logo">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4zm10 16H4V9h16v11z"/>
+                            </svg>
+                        </div>
+                        <div class="header-title">
+                            <h1 id="header-store-name">متجري</h1>
+                            <p id="header-store-phone">01XXXXXXXXX</p>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content">
+                <!-- Dashboard Tab -->
+                <div id="dashboard-tab" class="tab-content active">
+                    <div class="dashboard-header">
+                        <div class="today-sales">
+                            <div class="today-label">مبيعات اليوم</div>
+                            <div>
+                                <span class="today-amount" id="today-sales-amount">0</span>
+                                <span class="today-currency">ج.م</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon blue">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-label">أمس</div>
+                            </div>
+                            <div>
+                                <span class="stat-value" id="yesterday-sales">0</span>
+                                <span class="stat-unit">ج.م</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon green">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-label">هذا الشهر</div>
+                            </div>
+                            <div>
+                                <span class="stat-value" id="month-sales">0</span>
+                                <span class="stat-unit">ج.م</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon purple">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-label">عدد المنتجات</div>
+                            </div>
+                            <div>
+                                <span class="stat-value" id="total-products">0</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon orange">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-label">عدد المبيعات</div>
+                            </div>
+                            <div>
+                                <span class="stat-value" id="total-sales-count">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">
+                        <div class="section-title">سجل المبيعات</div>
+                        <div class="date-filter">
+                            <button class="filter-btn active" onclick="filterSales('today')">اليوم</button>
+                            <button class="filter-btn" onclick="filterSales('week')">الأسبوع</button>
+                            <button class="filter-btn" onclick="filterSales('month')">الشهر</button>
+                        </div>
+                    </div>
+
+                    <div class="sales-list" id="sales-list"></div>
+                </div>
+
+                <!-- Products Tab -->
+                <div id="products-tab" class="tab-content">
+                    <div class="search-box">
+                        <div class="search-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                            </svg>
+                        </div>
+                        <input type="text" class="search-input" id="search-input" placeholder="ابحث عن منتج..." oninput="searchProducts()">
+                    </div>
+
+                    <div class="product-list" id="product-list"></div>
+                </div>
+
+                <!-- Add Product Tab -->
+                <div id="add-tab" class="tab-content">
+                    <div id="success-message" class="success-message"></div>
+                    
+                    <form id="add-product-form" onsubmit="addProduct(event)">
+                        <div class="form-group">
+                            <label class="form-label">اسم المنتج</label>
+                            <input type="text" class="form-input" id="product-name" placeholder="أدخل اسم المنتج" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">السعر (جنيه مصري)</label>
+                            <input type="number" class="form-input" id="product-price" placeholder="0.00" step="0.01" required>
+                        </div>
+
+                        <div class="form-group camera-section">
+                            <label class="form-label">رقم الباركود</label>
+                            <div class="barcode-input-wrapper">
+                                <input type="text" class="form-input" id="product-barcode" placeholder="امسح أو أدخل الباركود" required>
+                                <button type="button" class="btn-camera" id="camera-btn" onclick="toggleCamera()">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M12 15c1.66 0 2.99-1.34 2.99-3L15 6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                                        <circle cx="12" cy="12" r="2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div id="camera-container" class="camera-container">
+                                <div id="camera-preview"></div>
+                                <div class="camera-overlay">وجه الكاميرا نحو الباركود</div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">إضافة المنتج</button>
+                    </form>
+                </div>
+
+                <!-- Scanner Tab -->
+                <div id="scanner-tab" class="tab-content">
+                    <div id="scanner-reader"></div>
+                    <button class="btn-primary" id="start-scanner" onclick="startMainScanner()">تشغيل الماسح</button>
+                    <button class="btn-secondary" id="stop-scanner" onclick="stopMainScanner()" style="display: none;">إيقاف الماسح</button>
+                    <div id="scanner-result"></div>
+                </div>
+
+                <!-- Reports Tab -->
+                <div id="reports-tab" class="tab-content">
+                    <div class="report-section">
+                        <div class="report-title">بيانات المتجر</div>
+                        <div class="report-item">
+                            <div class="report-label">اسم المتجر</div>
+                            <div class="report-value" id="report-store-name">-</div>
+                        </div>
+                        <div class="report-item">
+                            <div class="report-label">رقم الهاتف</div>
+                            <div class="report-value" id="report-store-phone">-</div>
+                        </div>
+                        <div class="report-item">
+                            <div class="report-label">البريد الإلكتروني</div>
+                            <div class="report-value" id="report-store-email">-</div>
+                        </div>
+                    </div>
+
+                    <div class="month-selector">
+                        <select id="month-select" onchange="updateMonthlyReport()">
+                            <option value="0">يناير</option>
+                            <option value="1">فبراير</option>
+                            <option value="2">مارس</option>
+                            <option value="3">أبريل</option>
+                            <option value="4">مايو</option>
+                            <option value="5">يونيو</option>
+                            <option value="6">يوليو</option>
+                            <option value="7">أغسطس</option>
+                            <option value="8">سبتمبر</option>
+                            <option value="9">أكتوبر</option>
+                            <option value="10">نوفمبر</option>
+                            <option value="11">ديسمبر</option>
+                        </select>
+                        <svg viewBox="0 0 24 24">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                    </div>
+
+                    <div class="report-section">
+                        <div class="report-title">ملخص الشهر</div>
+                        <div class="report-item">
+                            <div class="report-label">إجمالي المبيعات</div>
+                            <div class="report-value" id="report-month-total">0 ج.م</div>
+                        </div>
+                        <div class="report-item">
+                            <div class="report-label">عدد المبيعات</div>
+                            <div class="report-value" id="report-month-count">0</div>
+                        </div>
+                        <div class="report-item">
+                            <div class="report-label">متوسط البيع</div>
+                            <div class="report-value" id="report-month-avg">0 ج.م</div>
+                        </div>
+                    </div>
+
+                    <div class="report-section">
+                        <div class="report-title">أكثر المنتجات مبيعاً</div>
+                        <div class="top-products" id="top-products-list"></div>
+                    </div>
+
+                    <div class="report-section">
+                        <div class="report-title">المبيعات اليومية</div>
+                        <div id="daily-sales-report"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <button class="nav-item active" onclick="switchTab('dashboard')">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                    </div>
+                    <div class="nav-label">الرئيسية</div>
+                </button>
+                <button class="nav-item" onclick="switchTab('products')">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/>
+                        </svg>
+                    </div>
+                    <div class="nav-label">المنتجات</div>
+                </button>
+                <button class="nav-item" onclick="switchTab('add')">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                    </div>
+                    <div class="nav-label">إضافة</div>
+                </button>
+                <button class="nav-item" onclick="switchTab('scanner')">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5zm-6 8h1.5v1.5H13V13zm1.5 1.5H16V16h-1.5v-1.5zM16 13h1.5v1.5H16V13zm-3 3h1.5v1.5H13V16zm1.5 1.5H16V19h-1.5v-1.5zM16 16h1.5v1.5H16V16zm1.5-1.5H19V16h-1.5v-1.5zm0 3H19V19h-1.5v-1.5zM22 7h-2V4h-3V2h5v5zm0 15v-5h-2v3h-3v2h5zM2 22h5v-2H4v-3H2v5zM2 2v5h2V4h3V2H2z"/>
+                        </svg>
+                    </div>
+                    <div class="nav-label">ماسح</div>
+                </button>
+                <button class="nav-item" onclick="switchTab('reports')">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                        </svg>
+                    </div>
+                    <div class="nav-label">التقارير</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global Variables
+        let products = [];
+        let sales = [];
+        let storeData = null;
+        let addFormScanner = null;
+        let mainScanner = null;
+        let isAddFormScannerActive = false;
+        let isMainScannerActive = false;
+        let currentFilter = 'today';
+        let currentScannedProduct = null;
+
+        // Initialize App
+        window.onload = function() {
+            checkLogin();
+        };
+
+        // Check Login Status
+        function checkLogin() {
+            const stored = localStorage.getItem('storeData');
+            if (stored) {
+                storeData = JSON.parse(stored);
+                showMainApp();
+            } else {
+                document.getElementById('login-screen').style.display = 'flex';
+            }
+        }
+
+        // Preview Logo
+        function previewLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('preview-logo');
+                    preview.innerHTML = `<img src="${e.target.result}" alt="Logo">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Handle Login
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('store-name').value;
+            const phone = document.getElementById('store-phone').value;
+            const email = document.getElementById('store-email').value;
+            const logoInput = document.getElementById('logo-upload');
+            
+            // Check if user exists
+            const existingData = localStorage.getItem(`store_${phone}_${email}`);
+            if (existingData) {
+                storeData = JSON.parse(existingData);
+                localStorage.setItem('storeData', JSON.stringify(storeData));
+                
+                // Load existing data
+                if (storeData.products) products = storeData.products;
+                if (storeData.sales) sales = storeData.sales;
+                
+                showMainApp();
+                return;
+            }
+            
+            // New user
+            const data = {
+                name: name,
+                phone: phone,
+                email: email,
+                logo: null,
+                products: [],
+                sales: []
+            };
+            
+            if (logoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    data.logo = e.target.result;
+                    saveStoreData(data);
+                    showMainApp();
+                };
+                reader.readAsDataURL(logoInput.files[0]);
+            } else {
+                saveStoreData(data);
+                showMainApp();
+            }
+        }
+
+        // Save Store Data
+        function saveStoreData(data) {
+            storeData = data;
+            localStorage.setItem('storeData', JSON.stringify(data));
+            localStorage.setItem(`store_${data.phone}_${data.email}`, JSON.stringify(data));
+        }
+
+        // Show Main App
+        function showMainApp() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-app').classList.add('active');
+            
+            // Update header
+            document.getElementById('header-store-name').textContent = storeData.name;
+            document.getElementById('header-store-phone').textContent = storeData.phone;
+            
+            if (storeData.logo) {
+                document.getElementById('header-logo').innerHTML = `<img src="${storeData.logo}" alt="Logo">`;
+            }
+            
+            // Load data
+            loadProducts();
+            loadSales();
+            updateDashboard();
+            updateReports();
+            
+            // Set current month
+            const currentMonth = new Date().getMonth();
+            document.getElementById('month-select').value = currentMonth;
+        }
+
+        // Handle Logout
+        function handleLogout() {
+            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                // Save current data before logout
+                storeData.products = products;
+                storeData.sales = sales;
+                localStorage.setItem(`store_${storeData.phone}_${storeData.email}`, JSON.stringify(storeData));
+                
+                localStorage.removeItem('storeData');
+                location.reload();
+            }
+        }
+
+        // Switch Tabs
+        function switchTab(tabName) {
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Stop scanners when leaving tabs
+            if (tabName !== 'add' && isAddFormScannerActive) {
+                toggleCamera();
+            }
+            if (tabName !== 'scanner' && isMainScannerActive) {
+                stopMainScanner();
+            }
+        }
+
+        // Load Products
+        function loadProducts() {
+            const saved = localStorage.getItem('products');
+            if (saved) {
+                products = JSON.parse(saved);
+            }
+            displayProducts();
+        }
+
+        // Save Products
+        function saveProducts() {
+            localStorage.setItem('products', JSON.stringify(products));
+            if (storeData) {
+                storeData.products = products;
+                localStorage.setItem(`store_${storeData.phone}_${storeData.email}`, JSON.stringify(storeData));
+            }
+        }
+
+        // Display Products
+        function displayProducts() {
+            const productList = document.getElementById('product-list');
+            
+            if (products.length === 0) {
+                productList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/>
+                            </svg>
+                        </div>
+                        <div class="empty-state-text">لا توجد منتجات<br>قم بإضافة منتج جديد</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            productList.innerHTML = products.map(product => `
+                <div class="product-item">
+                    <div class="product-header">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">${product.price.toFixed(2)} ج.م</div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-barcode">${product.barcode}</div>
+                        <button class="btn-delete" onclick="deleteProduct(${product.id})">حذف</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateDashboard();
+        }
+
+        // Search Products
+        function searchProducts() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = products.filter(p => 
+                p.name.toLowerCase().includes(query) || 
+                p.barcode.includes(query)
+            );
+            
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = filtered.map(product => `
+                <div class="product-item">
+                    <div class="product-header">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">${product.price.toFixed(2)} ج.م</div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-barcode">${product.barcode}</div>
+                        <button class="btn-delete" onclick="deleteProduct(${product.id})">حذف</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Add Product
+        function addProduct(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('product-name').value;
+            const price = parseFloat(document.getElementById('product-price').value);
+            const barcode = document.getElementById('product-barcode').value;
+
+            if (products.some(p => p.barcode === barcode)) {
+                showMessage('هذا الباركود موجود بالفعل', 'error');
+                return;
+            }
+
+            const product = {
+                id: Date.now(),
+                name: name,
+                price: price,
+                barcode: barcode
+            };
+
+            products.push(product);
+            saveProducts();
+            displayProducts();
+
+            document.getElementById('add-product-form').reset();
+            showMessage('تم إضافة المنتج بنجاح');
+            
+            if (isAddFormScannerActive) {
+                toggleCamera();
+            }
+        }
+
+        // Delete Product
+        function deleteProduct(id) {
+            if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                products = products.filter(p => p.id !== id);
+                saveProducts();
+                displayProducts();
+            }
+        }
+
+        // Toggle Camera
+        function toggleCamera() {
+            const container = document.getElementById('camera-container');
+            const btn = document.getElementById('camera-btn');
+            
+            if (isAddFormScannerActive) {
+                if (addFormScanner) {
+                    addFormScanner.stop();
+                    addFormScanner = null;
+                }
+                container.classList.remove('active');
+                btn.classList.remove('active');
+                isAddFormScannerActive = false;
+            } else {
+                container.classList.add('active');
+                btn.classList.add('active');
+                isAddFormScannerActive = true;
+                startAddFormScanner();
+            }
+        }
+
+        // Start Add Form Scanner
+        function startAddFormScanner() {
+            addFormScanner = new Html5Qrcode("camera-preview");
+            
+            addFormScanner.start(
+                { facingMode: "environment" },
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 }
+                },
+                (decodedText) => {
+                    document.getElementById('product-barcode').value = decodedText;
+                    toggleCamera();
+                }
+            ).catch(err => {
+                console.error("Camera error:", err);
+                alert("فشل تشغيل الكاميرا");
+                toggleCamera();
+            });
+        }
+
+        // Start Main Scanner
+        function startMainScanner() {
+            document.getElementById('start-scanner').style.display = 'none';
+            document.getElementById('stop-scanner').style.display = 'block';
+            document.getElementById('scanner-result').innerHTML = '';
+            
+            mainScanner = new Html5Qrcode("scanner-reader");
+            isMainScannerActive = true;
+            
+            mainScanner.start(
+                { facingMode: "environment" },
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 }
+                },
+                (decodedText) => {
+                    const product = products.find(p => p.barcode === decodedText);
+                    
+                    if (product) {
+                        currentScannedProduct = product;
+                        displayScanResult(product);
+                        stopMainScanner();
+                    } else {
+                        displayScanError(decodedText);
+                    }
+                }
+            ).catch(err => {
+                console.error("Scanner error:", err);
+                alert("فشل تشغيل الماسح");
+                stopMainScanner();
+            });
+        }
+
+        // Stop Main Scanner
+        function stopMainScanner() {
+            if (mainScanner) {
+                mainScanner.stop();
+                mainScanner = null;
+            }
+            document.getElementById('start-scanner').style.display = 'block';
+            document.getElementById('stop-scanner').style.display = 'none';
+            isMainScannerActive = false;
+        }
+
+        // Display Scan Result
+        function displayScanResult(product) {
+            document.getElementById('scanner-result').innerHTML = `
+                <div class="scan-result">
+                    <div class="scan-result-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                        </svg>
+                    </div>
+                    <div class="scan-result-name">${product.name}</div>
+                    <div class="scan-result-price">${product.price.toFixed(2)} ج.م</div>
+                    <div class="scan-result-barcode">الباركود: ${product.barcode}</div>
+                    <div class="scan-actions">
+                        <button class="btn-secondary" onclick="startMainScanner()">مسح آخر</button>
+                        <button class="btn-sell" onclick="sellProduct()">تسجيل بيع</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Display Scan Error
+        function displayScanError(barcode) {
+            document.getElementById('scanner-result').innerHTML = `
+                <div class="scan-result error">
+                    <div class="scan-result-icon">
+                        <svg viewBox="0 0 24 24" style="fill: #ef4444;">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                    </div>
+                    <div class="scan-result-name" style="color: #ef4444;">منتج غير موجود</div>
+                    <div class="scan-result-barcode">الباركود: ${barcode}</div>
+                    <div class="scan-actions">
+                        <button class="btn-secondary" onclick="startMainScanner()">مسح آخر</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Sell Product
+        function sellProduct() {
+            if (!currentScannedProduct) return;
+            
+            const sale = {
+                id: Date.now(),
+                productId: currentScannedProduct.id,
+                productName: currentScannedProduct.name,
+                price: currentScannedProduct.price,
+                barcode: currentScannedProduct.barcode,
+                date: new Date().toISOString()
+            };
+            
+            sales.push(sale);
+            saveSales();
+            updateDashboard();
+            updateReports();
+            
+            document.getElementById('scanner-result').innerHTML = `
+                <div class="scan-result">
+                    <div class="scan-result-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                        </svg>
+                    </div>
+                    <div class="scan-result-name">تم تسجيل البيع بنجاح!</div>
+                    <div class="scan-result-price">${currentScannedProduct.price.toFixed(2)} ج.م</div>
+                    <div class="scan-actions">
+                        <button class="btn-primary" onclick="startMainScanner()">بيع منتج آخر</button>
+                    </div>
+                </div>
+            `;
+            
+            currentScannedProduct = null;
+        }
+
+        // Load Sales
+        function loadSales() {
+            const saved = localStorage.getItem('sales');
+            if (saved) {
+                sales = JSON.parse(saved);
+            }
+        }
+
+        // Save Sales
+        function saveSales() {
+            localStorage.setItem('sales', JSON.stringify(sales));
+            if (storeData) {
+                storeData.sales = sales;
+                localStorage.setItem(`store_${storeData.phone}_${storeData.email}`, JSON.stringify(storeData));
+            }
+        }
+
+        // Update Dashboard
+        function updateDashboard() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+            
+            // Today's sales
+            const todaySales = sales.filter(s => {
+                const saleDate = new Date(s.date);
+                saleDate.setHours(0, 0, 0, 0);
+                return saleDate.getTime() === today.getTime();
+            });
+            const todayTotal = todaySales.reduce((sum, s) => sum + s.price, 0);
+            document.getElementById('today-sales-amount').textContent = todayTotal.toFixed(2);
+            
+            // Yesterday's sales
+            const yesterdaySales = sales.filter(s => {
+                const saleDate = new Date(s.date);
+                saleDate.setHours(0, 0, 0, 0);
+                return saleDate.getTime() === yesterday.getTime();
+            });
+            const yesterdayTotal = yesterdaySales.reduce((sum, s) => sum + s.price, 0);
+            document.getElementById('yesterday-sales').textContent = yesterdayTotal.toFixed(2);
+            
+            // Month's sales
+            const monthSales = sales.filter(s => {
+                const saleDate = new Date(s.date);
+                return saleDate >= monthStart;
+            });
+            const monthTotal = monthSales.reduce((sum, s) => sum + s.price, 0);
+            document.getElementById('month-sales').textContent = monthTotal.toFixed(2);
+            
+            // Total products
+            document.getElementById('total-products').textContent = products.length;
+            
+            // Total sales count
+            document.getElementById('total-sales-count').textContent = sales.length;
+            
+            // Update sales list
+            displaySalesList();
+        }
+
+        // Filter Sales
+        function filterSales(filter) {
+            currentFilter = filter;
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            displaySalesList();
+        }
+
+        // Display Sales List
+        function displaySalesList() {
+            const salesList = document.getElementById('sales-list');
+            
+            const now = new Date();
+            let filteredSales = [];
+            
+            if (currentFilter === 'today') {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                filteredSales = sales.filter(s => {
+                    const saleDate = new Date(s.date);
+                    saleDate.setHours(0, 0, 0, 0);
+                    return saleDate.getTime() === today.getTime();
+                });
+            } else if (currentFilter === 'week') {
+                const weekAgo = new Date(now);
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                filteredSales = sales.filter(s => new Date(s.date) >= weekAgo);
+            } else if (currentFilter === 'month') {
+                const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+                filteredSales = sales.filter(s => new Date(s.date) >= monthStart);
+            }
+            
+            if (filteredSales.length === 0) {
+                salesList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            </svg>
+                        </div>
+                        <div class="empty-state-text">لا توجد مبيعات في هذه الفترة</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Group by date
+            const grouped = {};
+            filteredSales.forEach(sale => {
+                const date = new Date(sale.date).toLocaleDateString('ar-EG');
+                if (!grouped[date]) {
+                    grouped[date] = [];
+                }
+                grouped[date].push(sale);
+            });
+            
+            salesList.innerHTML = Object.keys(grouped).map(date => {
+                const daySales = grouped[date];
+                const total = daySales.reduce((sum, s) => sum + s.price, 0);
+                const products = daySales.map(s => s.productName).join('، ');
+                
+                return `
+                    <div class="sale-item">
+                        <div class="sale-header">
+                            <div class="sale-date">${date}</div>
+                            <div class="sale-total">${total.toFixed(2)} ج.م</div>
+                        </div>
+                        <div class="sale-products">${daySales.length} عملية بيع: ${products}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update Reports
+        function updateReports() {
+            // Store info
+            document.getElementById('report-store-name').textContent = storeData.name;
+            document.getElementById('report-store-phone').textContent = storeData.phone;
+            document.getElementById('report-store-email').textContent = storeData.email;
+            
+            updateMonthlyReport();
+        }
+
+        // Update Monthly Report
+        function updateMonthlyReport() {
+            const selectedMonth = parseInt(document.getElementById('month-select').value);
+            const currentYear = new Date().getFullYear();
+            
+            const monthSales = sales.filter(s => {
+                const saleDate = new Date(s.date);
+                return saleDate.getMonth() === selectedMonth && saleDate.getFullYear() === currentYear;
+            });
+            
+            const monthTotal = monthSales.reduce((sum, s) => sum + s.price, 0);
+            const monthCount = monthSales.length;
+            const monthAvg = monthCount > 0 ? monthTotal / monthCount : 0;
+            
+            document.getElementById('report-month-total').textContent = monthTotal.toFixed(2) + ' ج.م';
+            document.getElementById('report-month-count').textContent = monthCount;
+            document.getElementById('report-month-avg').textContent = monthAvg.toFixed(2) + ' ج.م';
+            
+            // Top products
+            const productCounts = {};
+            monthSales.forEach(sale => {
+                if (!productCounts[sale.productId]) {
+                    productCounts[sale.productId] = {
+                        name: sale.productName,
+                        count: 0,
+                        total: 0
+                    };
+                }
+                productCounts[sale.productId].count++;
+                productCounts[sale.productId].total += sale.price;
+            });
+            
+            const topProducts = Object.values(productCounts)
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 5);
+            
+            const topProductsList = document.getElementById('top-products-list');
+            if (topProducts.length === 0) {
+                topProductsList.innerHTML = `
+                    <div class="empty-state-text" style="padding: 20px;">لا توجد مبيعات في هذا الشهر</div>
+                `;
+            } else {
+                topProductsList.innerHTML = topProducts.map((product, index) => `
+                    <div class="top-product-item">
+                        <div class="top-product-rank">${index + 1}</div>
+                        <div class="top-product-info">
+                            <div class="top-product-name">${product.name}</div>
+                            <div class="top-product-sales">${product.total.toFixed(2)} ج.م</div>
+                        </div>
+                        <div class="top-product-count">${product.count}</div>
+                    </div>
+                `).join('');
+            }
+            
+            // Daily sales
+            const dailySales = {};
+            monthSales.forEach(sale => {
+                const date = new Date(sale.date).toLocaleDateString('ar-EG');
+                if (!dailySales[date]) {
+                    dailySales[date] = 0;
+                }
+                dailySales[date] += sale.price;
+            });
+            
+            const dailySalesReport = document.getElementById('daily-sales-report');
+            if (Object.keys(dailySales).length === 0) {
+                dailySalesReport.innerHTML = `
+                    <div class="empty-state-text" style="padding: 20px;">لا توجد مبيعات في هذا الشهر</div>
+                `;
+            } else {
+                dailySalesReport.innerHTML = Object.keys(dailySales)
+                    .sort((a, b) => new Date(b) - new Date(a))
+                    .map(date => `
+                        <div class="report-item">
+                            <div class="report-label">${date}</div>
+                            <div class="report-value">${dailySales[date].toFixed(2)} ج.م</div>
+                        </div>
+                    `).join('');
+            }
+        }
+
+        // Show Message
+        function showMessage(text, type = 'success') {
+            const messageEl = document.getElementById('success-message');
+            messageEl.textContent = text;
+            messageEl.className = 'success-message show';
+            
+            if (type === 'error') {
+                messageEl.style.background = 'rgba(239, 68, 68, 0.1)';
+                messageEl.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+                messageEl.style.color = '#ef4444';
+            } else {
+                messageEl.style.background = 'rgba(16, 185, 129, 0.1)';
+                messageEl.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                messageEl.style.color = '#10b981';
+            }
+            
+            setTimeout(() => {
+                messageEl.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
